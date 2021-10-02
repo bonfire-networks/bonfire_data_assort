@@ -41,7 +41,7 @@ defmodule Bonfire.Data.Assort.Ranked do
     model
     |> Ecto.Changeset.cast(params, [:rank_set, :rank] ++ @relations)
     |> Ecto.Changeset.validate_required(@required)
-    |> set_rank(rank: :rank, position: :rank_set, scope: [:scope_id, :rank_type_id], scope_required: true)
+    |> set_rank(rank: :rank, position: :rank_set, scope: [:scope_id, :rank_type_id])
   end
 
 
