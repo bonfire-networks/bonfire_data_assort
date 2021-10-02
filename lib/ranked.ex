@@ -2,6 +2,19 @@ defmodule Bonfire.Data.Assort.Ranked do
   @table_name "bonfire_data_ranked"
   @moduledoc """
   A reusable table to link child or related items and also rank sibling items.
+
+  Usage (for global ranking, otherwise you should specify scope):
+  ```
+  {:ok, first} = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH48ZZD08ADBHQ260KYJHW"}) |> Bonfire.Repo.insert
+  second = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH0N3YPBS5MNNAEAEVV54J"}) |> Bonfire.Repo.insert
+
+  import Ecto.Query
+  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Bonfire.Repo.all
+
+  first |> Bonfire.Data.Assort.Ranked.changeset(%{rank_set: :last}) |> Bonfire.Repo.update
+
+  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Bonfire.Repo.all
+  ```
   """
 
   use Ecto.Schema
@@ -68,6 +81,11 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
       Ecto.Migration.create_if_not_exists(
         Ecto.Migration.unique_index(unquote(@table_name), unquote(@unique_index), unquote(opts))
       )
+
+      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_without_scope ON #{unquote(@table_name)} (item_id) WHERE scope_id IS NULL AND rank_type_id IS NULL;")
+      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_rank_type ON #{unquote(@table_name)} (item_id, rank_type_id) WHERE scope_id IS NULL;")
+      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_scope ON #{unquote(@table_name)} (item_id, scope_id) WHERE rank_type_id IS NULL;")
+
     end
   end
 
