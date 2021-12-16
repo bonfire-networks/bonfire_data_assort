@@ -1,6 +1,6 @@
-# bonfire_data_assort
+# Bonfire.Data.Assort
 
-Database schemas for:
+Various assorted database schemas for:
 - Ranked linked items
 - TODO: move schemas from bonfire_classify and bonfire_tag here?
 
