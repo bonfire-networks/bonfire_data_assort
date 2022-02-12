@@ -31,7 +31,7 @@ defmodule Bonfire.Data.Assort.Ranked do
   schema @table_name do
     belongs_to :item, Pointer
     belongs_to :scope, Pointer
-    belongs_to :rank_type, Bonfire.Tag
+    belongs_to :rank_type, Pointer
     field :rank, :integer
     field :rank_set, :any, virtual: true
   end
@@ -63,7 +63,7 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
       create table(unquote(@table_name)) do
         add :item_id, strong_pointer(Pointer)
         add :scope_id, weak_pointer(Pointer)
-        add :rank_type_id, weak_pointer(Bonfire.Tag)
+        add :rank_type_id, weak_pointer()
         add :rank, :integer
         # timestamps()
       end
