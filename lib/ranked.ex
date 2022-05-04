@@ -5,15 +5,15 @@ defmodule Bonfire.Data.Assort.Ranked do
 
   Usage (for global ranking, otherwise you should specify scope):
   ```
-  {:ok, first} = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH48ZZD08ADBHQ260KYJHW"}) |> Bonfire.Repo.insert
-  second = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH0N3YPBS5MNNAEAEVV54J"}) |> Bonfire.Repo.insert
+  {:ok, first} = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH48ZZD08ADBHQ260KYJHW"}) |> Repo.insert
+  second = Bonfire.Data.Assort.Ranked.changeset(%{item_id: "01FGTH0N3YPBS5MNNAEAEVV54J"}) |> Repo.insert
 
   import Ecto.Query
-  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Bonfire.Repo.all
+  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Repo.all
 
-  first |> Bonfire.Data.Assort.Ranked.changeset(%{rank_set: :last}) |> Bonfire.Repo.update
+  first |> Bonfire.Data.Assort.Ranked.changeset(%{rank_set: :last}) |> Repo.update
 
-  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Bonfire.Repo.all
+  Bonfire.Data.Assort.Ranked |> order_by(:rank) |> Repo.all
   ```
   """
 
