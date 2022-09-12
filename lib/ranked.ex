@@ -29,23 +29,25 @@ defmodule Bonfire.Data.Assort.Ranked do
 
   @foreign_key_type Pointers.ULID
   schema @table_name do
-    belongs_to :item, Pointer
-    belongs_to :scope, Pointer
-    belongs_to :rank_type, Pointer
-    field :rank, :integer
-    field :rank_set, :any, virtual: true
+    belongs_to(:item, Pointer)
+    belongs_to(:scope, Pointer)
+    belongs_to(:rank_type, Pointer)
+    field(:rank, :integer)
+    field(:rank_set, :any, virtual: true)
   end
-
 
   def changeset(model \\ %Ranked{}, params) do
     model
     |> Ecto.Changeset.cast(params, [:rank_set, :rank] ++ @relations)
     |> Ecto.Changeset.validate_required(@required)
-    |> set_rank(rank: :rank, position: :rank_set, scope: [:scope_id, :rank_type_id])
+    |> set_rank(
+      rank: :rank,
+      position: :rank_set,
+      scope: [:scope_id, :rank_type_id]
+    )
   end
-
-
 end
+
 defmodule Bonfire.Data.Assort.Ranked.Migration do
   @table_name "bonfire_data_ranked"
   @unique_index [:item_id, :scope_id, :rank_type_id]
@@ -61,31 +63,41 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
       require Pointers.Migration
 
       create table(unquote(@table_name)) do
-        add :item_id, strong_pointer(Pointer)
-        add :scope_id, weak_pointer(Pointer)
-        add :rank_type_id, weak_pointer()
-        add :rank, :integer
+        add(:item_id, strong_pointer(Pointer))
+        add(:scope_id, weak_pointer(Pointer))
+        add(:rank_type_id, weak_pointer())
+        add(:rank, :integer)
         # timestamps()
       end
-
     end
   end
 
   defmacro create_ranked_table(), do: make_ranked_table([])
-  defmacro create_ranked_table([do: {_, _, body}]), do: make_ranked_table(body)
-
+  defmacro create_ranked_table(do: {_, _, body}), do: make_ranked_table(body)
 
   defp make_unique_index(opts) do
     quote do
       flush()
+
       Ecto.Migration.create_if_not_exists(
-        Ecto.Migration.unique_index(unquote(@table_name), unquote(@unique_index), unquote(opts))
+        Ecto.Migration.unique_index(
+          unquote(@table_name),
+          unquote(@unique_index),
+          unquote(opts)
+        )
       )
 
-      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_without_scope ON #{unquote(@table_name)} (item_id) WHERE scope_id IS NULL AND rank_type_id IS NULL;")
-      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_rank_type ON #{unquote(@table_name)} (item_id, rank_type_id) WHERE scope_id IS NULL;")
-      Ecto.Migration.execute("CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_scope ON #{unquote(@table_name)} (item_id, scope_id) WHERE rank_type_id IS NULL;")
+      Ecto.Migration.execute(
+        "CREATE UNIQUE INDEX bonfire_data_ranked_unique_without_scope ON #{unquote(@table_name)} (item_id) WHERE scope_id IS NULL AND rank_type_id IS NULL;"
+      )
 
+      Ecto.Migration.execute(
+        "CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_rank_type ON #{unquote(@table_name)} (item_id, rank_type_id) WHERE scope_id IS NULL;"
+      )
+
+      Ecto.Migration.execute(
+        "CREATE UNIQUE INDEX bonfire_data_ranked_unique_per_scope ON #{unquote(@table_name)} (item_id, scope_id) WHERE rank_type_id IS NULL;"
+      )
     end
   end
 
@@ -93,13 +105,14 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
   defmacro create_unique_index(opts), do: make_unique_index(opts)
 
   def drop_unique_index(opts \\ [])
-  def drop_unique_index(opts), do: drop_if_exists(unique_index(@grant_table, @unique_index, opts))
 
+  def drop_unique_index(opts),
+    do: drop_if_exists(unique_index(@grant_table, @unique_index, opts))
 
   # drop_ranked_table/0
 
   def drop_ranked_table() do
-    drop_if_exists table(@table_name)
+    drop_if_exists(table(@table_name))
   end
 
   # migrate_ranked/{0,1}
@@ -125,6 +138,6 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
         else: unquote(mu(:down))
     end
   end
-  defmacro migrate_ranked(dir), do: mu(dir)
 
+  defmacro migrate_ranked(dir), do: mu(dir)
 end
