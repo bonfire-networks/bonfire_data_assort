@@ -1,5 +1,4 @@
 defmodule Bonfire.Data.Assort.Ranked do
-  @table_name "bonfire_data_ranked"
   @moduledoc """
   A reusable table to link child or related items and also rank sibling items.
 
@@ -28,7 +27,7 @@ defmodule Bonfire.Data.Assort.Ranked do
   @required [:item_id]
 
   @foreign_key_type Pointers.ULID
-  schema @table_name do
+  schema "bonfire_data_ranked" do
     belongs_to(:item, Pointer)
     belongs_to(:scope, Pointer)
     belongs_to(:rank_type, Pointer)
