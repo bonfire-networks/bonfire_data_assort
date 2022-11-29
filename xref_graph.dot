@@ -1,0 +1,3 @@
+digraph "xref graph" {
+  "lib/ranked.ex"
+}
