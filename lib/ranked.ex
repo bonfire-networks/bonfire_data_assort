@@ -17,7 +17,7 @@ defmodule Bonfire.Data.Assort.Ranked do
   """
 
   use Ecto.Schema
-  import Ecto.Changeset
+  # import Ecto.Changeset
   import EctoRanked
 
   alias Pointers.Pointer
@@ -57,7 +57,7 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
 
   # create_ranked_table/{0,1}
 
-  defp make_ranked_table(exprs) do
+  defp make_ranked_table(_exprs) do
     quote do
       require Pointers.Migration
 
@@ -106,7 +106,7 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
   def drop_unique_index(opts \\ [])
 
   def drop_unique_index(opts),
-    do: drop_if_exists(unique_index(@grant_table, @unique_index, opts))
+    do: drop_if_exists(unique_index(@table_name, @unique_index, opts))
 
   # drop_ranked_table/0
 
