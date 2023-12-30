@@ -20,13 +20,13 @@ defmodule Bonfire.Data.Assort.Ranked do
   # import Ecto.Changeset
   import EctoRanked
 
-  alias Pointers.Pointer
+  alias Needle.Pointer
   alias Bonfire.Data.Assort.Ranked
 
   @relations [:item_id, :scope_id, :rank_type_id]
   @required [:item_id]
 
-  @foreign_key_type Pointers.ULID
+  @foreign_key_type Needle.ULID
   schema "bonfire_data_ranked" do
     belongs_to(:item, Pointer)
     belongs_to(:scope, Pointer)
@@ -52,14 +52,14 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
   @unique_index [:item_id, :scope_id, :rank_type_id]
 
   use Ecto.Migration
-  import Pointers.Migration
-  alias Pointers.Pointer
+  import Needle.Migration
+  alias Needle.Pointer
 
   # create_ranked_table/{0,1}
 
   defp make_ranked_table(_exprs) do
     quote do
-      require Pointers.Migration
+      require Needle.Migration
 
       create table(unquote(@table_name)) do
         add(:item_id, strong_pointer(Pointer))

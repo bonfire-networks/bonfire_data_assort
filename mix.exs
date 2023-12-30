@@ -37,7 +37,7 @@ defmodule Bonfire.Data.Assort.MixProject do
         extras: ["README.md"]
       ],
       deps: Mess.deps [
-        {:pointers, "~> 0.5.1"},
+        {:needle, "~> 0.7"},
         {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
         {:ecto_ranked, "~> 0.5.0"}
       ]
