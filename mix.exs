@@ -39,7 +39,7 @@ defmodule Bonfire.Data.Assort.MixProject do
       deps: Mess.deps [
         {:needle, "~> 0.7"},
         {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-        {:ecto_ranked, "~> 0.5.0"}
+        {:ecto_ranked, "~> 0.6.0"}
       ]
     ]
   end
