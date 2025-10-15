@@ -59,12 +59,12 @@ defmodule Bonfire.Data.Assort.Ranked.Migration do
 
   defp make_ranked_table(_exprs) do
     quote do
-      require Needle.Migration
+      import Needle.Migration
 
       create table(unquote(@table_name)) do
-        add(:item_id, strong_pointer(Pointer))
-        add(:scope_id, weak_pointer(Pointer))
-        add(:rank_type_id, weak_pointer())
+        add_pointer(:item_id, :strong, Needle.Pointer)
+        add_pointer(:scope_id, :weak, Needle.Pointer)
+        add_pointer(:rank_type_id, :weak, Needle.Pointer)
         add(:rank, :integer)
         # timestamps()
       end
