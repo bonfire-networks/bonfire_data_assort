@@ -19,6 +19,7 @@ defmodule Bonfire.Data.Assort.Ranked do
   use Ecto.Schema
   # import Ecto.Changeset
   import EctoRanked
+  require Ecto.Query
 
   alias Needle.Pointer
   alias Bonfire.Data.Assort.Ranked
@@ -34,6 +35,9 @@ defmodule Bonfire.Data.Assort.Ranked do
     field(:rank, :integer)
     field(:rank_set, :any, virtual: true)
   end
+
+  @doc "A `preload_order` for a `many_to_many` joined through this table, so the items come back in rank order rather than in whatever order the database returns them (Ecto binds the join table last)."
+  def preload_order, do: [asc: Ecto.Query.dynamic([_item, ranked], ranked.rank)]
 
   def changeset(model \\ %Ranked{}, params) do
     model
